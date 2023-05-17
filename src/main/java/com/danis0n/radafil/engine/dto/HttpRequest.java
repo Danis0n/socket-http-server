@@ -14,6 +14,6 @@ public class HttpRequest {
     private String urn;
     private String url;
     private String keyPrefix;
-    private String contentType;
+    private String content;
     private HttpMethod httpMethod;
 }

@@ -1,6 +1,7 @@
 package com.danis0n.radafil.engine.core.handler;
 
 import com.danis0n.radafil.engine.annotation.http.RestController;
+import com.danis0n.radafil.engine.annotation.http.input.Body;
 import com.danis0n.radafil.engine.annotation.http.method.*;
 import com.danis0n.radafil.engine.annotation.inject.Inject;
 import com.danis0n.radafil.engine.annotation.singleton.Singleton;
@@ -24,7 +25,7 @@ import static java.util.Objects.isNull;
 public class RequestHandler {
 
     @Inject
-    private PathHandler pathHandler;
+    private InputValidator inputValidator;
     @Inject
     private Extractor extractor;
 
@@ -66,13 +67,19 @@ public class RequestHandler {
                                     .invoke(annotatedMethod)
                                     .toString();
 
-                            System.out.println("urn " + httpRequest.getUrn());
-                            System.out.println("path " + signature);
+                            if (inputValidator.validateWithUrlSignature(signature, httpRequest.getUrn())) {
 
-                            if (pathHandler.validatePath(signature, httpRequest.getUrn())) {
-                                Object obj = method.invoke(context.getFactory().createObject(entry), "21");
+//                                if (method.getAnnotatedReturnType(Body.class)) {
+//                                    System.out.println("BODY is HERE!");
+//                                }
+// TODO: IMPLEMENT validate method
+                                Object obj = method.invoke(context.getFactory().createObject(entry),
+                                        (Object) null
+                                );
 
-                                System.out.println("Objet " + obj.toString());
+                                if (isNull(obj)) return;
+
+                                System.out.println("Objet " + obj);
                                 return;
 
                             }
