@@ -1,11 +1,10 @@
 package com.danis0n.utils;
 
-import com.danis0n.radafil.engine.http.HttpMethod;
-import com.danis0n.radafil.engine.dto.HttpRequest;
+import com.danis0n.radafil.engine.core.http.HttpMethod;
+import com.danis0n.radafil.engine.core.http.request.HttpRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static com.danis0n.api.Api.API_PREFIX;
 import static java.util.Objects.nonNull;

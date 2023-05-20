@@ -5,7 +5,7 @@ import com.danis0n.radafil.engine.annotation.http.RestController;
 import com.danis0n.radafil.engine.annotation.http.method.Delete;
 import com.danis0n.radafil.engine.annotation.http.method.Get;
 import com.danis0n.radafil.engine.annotation.http.method.Post;
-import com.danis0n.radafil.engine.annotation.http.method.RequestMapping;
+import com.danis0n.radafil.engine.annotation.http.RequestMapping;
 import com.danis0n.radafil.engine.annotation.http.input.Body;
 import com.danis0n.radafil.engine.annotation.http.input.PathVariable;
 
@@ -13,18 +13,26 @@ import com.danis0n.radafil.engine.annotation.http.input.PathVariable;
 @RequestMapping(path = "/api/v1/user")
 public class UserController {
 
-    @Get()
-    public String sayHello() {
+    @Get(path = "/get/{hello}/{username}")
+    public String sayHello(@PathVariable("username") String hello,
+                           @PathVariable("hello") String username) {
         System.out.println("Hello from user controller");
-        return "Hello";
+        return hello + " " + username;
     }
 
-    @Post()
-    public TestRequest showId(@Body TestRequest request) {
-        return request;
+    @Get(path = "/get/get/{hello}/{username}")
+    public String sayGoodBye(@PathVariable("username") String hello,
+                           @PathVariable("hello") String username) {
+        System.out.println("Hello from user controller");
+        return hello + " Bye " + username;
     }
 
-    @Delete(path = "{id}")
+    @Post(path = "/update/{id}/with-username/{username}/showcase")
+    public String showId() {
+        return "POST";
+    }
+
+    @Delete(path = "/{id}")
     public String sayDelete(@PathVariable("id") String id) {
         return "Deleted " + id;
     }

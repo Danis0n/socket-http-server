@@ -1,8 +1,8 @@
 package com.danis0n.radafil.engine.core.factory;
 
 import com.danis0n.radafil.engine.core.context.ApplicationContext;
-import com.danis0n.radafil.engine.core.context.ObjectConfigurator;
-import com.danis0n.radafil.engine.core.context.ProxyConfigurator;
+import com.danis0n.radafil.engine.core.configurator.ObjectConfigurator;
+import com.danis0n.radafil.engine.core.configurator.ProxyConfigurator;
 import lombok.SneakyThrows;
 
 import java.util.ArrayList;
@@ -26,13 +26,10 @@ public class ObjectFactory {
 
     @SneakyThrows
     public <T> T createObject(Class<T> implClass) {
-
         T t = create(implClass);
-
         configure(t);
 
         t = wrapWithProxyIfNeeded(implClass, t);
-
         return t;
 
     }

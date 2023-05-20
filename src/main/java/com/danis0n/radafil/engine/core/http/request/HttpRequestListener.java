@@ -1,10 +1,8 @@
-package com.danis0n.radafil.engine.core.listener;
+package com.danis0n.radafil.engine.core.http.request;
 
 import com.danis0n.radafil.engine.annotation.inject.Inject;
 import com.danis0n.radafil.engine.annotation.singleton.Singleton;
 import com.danis0n.radafil.engine.core.context.ApplicationContext;
-import com.danis0n.radafil.engine.core.handler.RequestHandler;
-import com.danis0n.radafil.engine.dto.HttpRequest;
 import com.danis0n.utils.RequestUtil;
 
 import java.io.*;
@@ -15,16 +13,16 @@ import static com.danis0n.config.ContentType.CONTENT_TYPES;
 import static java.util.Objects.isNull;
 
 @Singleton
-public class RequestListener {
+public class HttpRequestListener {
 
     @Inject
-    private RequestHandler processor;
+    private HttpRequestHandler processor;
     @Inject
     private RequestUtil requestUtil;
 
     private static final String NOT_FOUND_MESSAGE = "NOT FOUND";
 
-    public void listen(Socket socket, ApplicationContext context) {
+    public void doListen(Socket socket, ApplicationContext context) {
 
         try (InputStream in = socket.getInputStream();
              OutputStream out = socket.getOutputStream();

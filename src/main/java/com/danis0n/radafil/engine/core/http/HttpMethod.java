@@ -1,4 +1,4 @@
-package com.danis0n.radafil.engine.http;
+package com.danis0n.radafil.engine.core.http;
 
 public enum HttpMethod {
     GET,

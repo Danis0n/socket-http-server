@@ -1,4 +1,4 @@
-package com.danis0n.radafil.engine.annotation.http.method;
+package com.danis0n.radafil.engine.annotation.http;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,6 +1,7 @@
-package com.danis0n.radafil.engine.core.context;
+package com.danis0n.radafil.engine.core.configurator;
 
 import com.danis0n.radafil.engine.annotation.inject.Inject;
+import com.danis0n.radafil.engine.core.context.ApplicationContext;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;

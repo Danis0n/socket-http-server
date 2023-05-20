@@ -1,6 +1,6 @@
-package com.danis0n.radafil.engine.dto;
+package com.danis0n.radafil.engine.core.http.request;
 
-import com.danis0n.radafil.engine.http.HttpMethod;
+import com.danis0n.radafil.engine.core.http.HttpMethod;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
