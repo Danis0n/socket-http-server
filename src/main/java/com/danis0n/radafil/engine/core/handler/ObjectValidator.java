@@ -1,18 +1,24 @@
 package com.danis0n.radafil.engine.core.handler;
 
+import com.danis0n.radafil.engine.annotation.http.RequestMapping;
 import com.danis0n.radafil.engine.annotation.singleton.Singleton;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
-public class InputValidator {
+public class ObjectValidator {
 
-    public boolean isValidatedWithSignature(String signature, String currentUrn) {
+    public boolean isControllerValidatedByPrefix(Class<?> clazz, String url) {
+        RequestMapping annotation = clazz.getAnnotation(RequestMapping.class);
+        String prefix = annotation.path();
+        return url.startsWith(prefix);
+    }
+
+    public boolean isUrnValidatedWithSignature(String signature, String currentUrn) {
         if (currentUrn.equals(signature) && currentUrn.equals("")) {
             return true;
         }
-        currentUrn = currentUrn.substring(1);
 
         Matcher m = Pattern.compile("\\{(.*?)}").matcher(signature);
         while(m.find()) {

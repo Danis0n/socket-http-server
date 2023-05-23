@@ -3,7 +3,7 @@ package com.danis0n.radafil.engine.core.server;
 import com.danis0n.radafil.engine.annotation.inject.Inject;
 import com.danis0n.radafil.engine.annotation.singleton.Singleton;
 import com.danis0n.radafil.engine.core.context.ApplicationContext;
-import com.danis0n.radafil.engine.core.http.request.HttpRequestListener;
+import com.danis0n.radafil.engine.core.handler.Listener;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class Server {
 
     @Inject
-    private HttpRequestListener listener;
+    private Listener listener;
     private final int port = 8080;
 
     public void start(ApplicationContext context) {
@@ -24,7 +24,7 @@ public class Server {
 
             while (true) {
                 Socket socket = server.accept();
-                listener.doListen(socket, context);
+                listener.listen(socket, context);
             }
 
         } catch (IOException e) {
