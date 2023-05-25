@@ -1,9 +1,8 @@
-package com.danis0n.radafil.engine.core.extractor;
+package com.danis0n.utils;
 
 import com.danis0n.radafil.engine.annotation.http.RequestMapping;
-import com.danis0n.radafil.engine.annotation.inject.Inject;
-import com.danis0n.radafil.engine.annotation.singleton.Singleton;
-import com.danis0n.radafil.engine.core.handler.Handler;
+import com.danis0n.radafil.engine.annotation.component.InternalComponent;
+import com.danis0n.radafil.engine.core.http.HttpHandler;
 import com.danis0n.radafil.engine.core.handler.ObjectValidator;
 import com.danis0n.radafil.engine.core.http.HttpMethod;
 import com.danis0n.radafil.engine.exception.EndpointNotFoundException;
@@ -15,18 +14,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.danis0n.radafil.engine.core.handler.Handler.HTTP_METHOD;
+import static com.danis0n.radafil.engine.core.http.HttpHandler.HTTP_METHOD;
 import static java.util.Objects.isNull;
 
-@Singleton
-public class ObjectExtractor {
+@InternalComponent
+public class ObjectExtractorUtil {
 
-    @Inject
-    private Extractor extractor;
-    @Inject
-    private ObjectValidator validator;
+    private final ExtractorUtil extractorUtil;
+    private final ObjectValidator validator;
 
-    public Handler.MethodWithSignature extractMethodFromController(Class<?> controller, HttpMethod httpMethod, String urn)
+    public ObjectExtractorUtil(ObjectValidator validator, ExtractorUtil extractorUtil) {
+        this.extractorUtil = extractorUtil;
+        this.validator = validator;
+    }
+
+    public HttpHandler.MethodWithSignature extractMethodFromController(Class<?> controller, HttpMethod httpMethod, String urn)
             throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 
         List<Method> sortedMethods = Arrays
@@ -34,7 +36,7 @@ public class ObjectExtractor {
                 .filter(method -> method.isAnnotationPresent(HTTP_METHOD.get(httpMethod)))
                 .collect(Collectors.toList());
 
-        Handler.MethodWithSignature methodWithSignature =
+        HttpHandler.MethodWithSignature methodWithSignature =
                 findMethodBySignature(urn, httpMethod, sortedMethods);
 
         if (isNull(methodWithSignature))
@@ -57,15 +59,15 @@ public class ObjectExtractor {
         return controller.get();
     }
 
-    private Handler.MethodWithSignature findMethodBySignature(String urn, HttpMethod httpMethod, List<Method> methods)
+    private HttpHandler.MethodWithSignature findMethodBySignature(String urn, HttpMethod httpMethod, List<Method> methods)
             throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 
         for (Method method: methods) {
 
-            String signature = extractor.extractSignatureFromMethod(method, httpMethod);
+            String signature = extractorUtil.extractSignatureFromMethod(method, httpMethod);
 
             if (validator.isUrnValidatedWithSignature(signature, urn))
-                return new Handler.MethodWithSignature(method, signature);
+                return new HttpHandler.MethodWithSignature(method, signature);
         }
 
         return null;

@@ -1,13 +1,15 @@
 package com.danis0n.radafil.engine.core.handler;
 
 import com.danis0n.radafil.engine.annotation.http.RequestMapping;
-import com.danis0n.radafil.engine.annotation.singleton.Singleton;
+import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Singleton
+@InternalComponent
 public class ObjectValidator {
+
+    public ObjectValidator() {}
 
     public boolean isControllerValidatedByPrefix(Class<?> clazz, String url) {
         RequestMapping annotation = clazz.getAnnotation(RequestMapping.class);

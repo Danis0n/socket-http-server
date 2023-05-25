@@ -1,18 +1,18 @@
-package com.danis0n.radafil.engine.core.handler;
+package com.danis0n.radafil.engine.core.http;
 
-import com.danis0n.radafil.engine.annotation.http.RestController;
+import com.danis0n.radafil.engine.annotation.component.RestController;
 import com.danis0n.radafil.engine.annotation.http.method.Delete;
 import com.danis0n.radafil.engine.annotation.http.method.Get;
 import com.danis0n.radafil.engine.annotation.http.method.Post;
 import com.danis0n.radafil.engine.annotation.http.method.Put;
-import com.danis0n.radafil.engine.annotation.inject.Inject;
-import com.danis0n.radafil.engine.annotation.singleton.Singleton;
+import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.context.ApplicationContext;
-import com.danis0n.radafil.engine.core.extractor.ObjectExtractor;
-import com.danis0n.radafil.engine.core.http.HttpMethod;
-import com.danis0n.radafil.engine.core.http.request.HttpRequest;
 import com.danis0n.radafil.engine.core.http.request.HttpRequestHandler;
+import com.danis0n.radafil.engine.core.http.request.RequestHandler;
 import com.danis0n.radafil.engine.core.http.response.HttpResponseHandler;
+import com.danis0n.radafil.engine.core.http.response.ResponseHandler;
+import com.danis0n.utils.ObjectExtractorUtil;
+import com.danis0n.radafil.engine.core.http.request.HttpRequest;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,15 +22,12 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Singleton
-public class Handler {
+@InternalComponent
+public class HttpHandler {
 
-    @Inject
-    private ObjectExtractor extractor;
-    @Inject
-    private HttpRequestHandler requestHandler;
-    @Inject
-    private HttpResponseHandler responseHandler;
+    private final ObjectExtractorUtil extractor;
+    private final RequestHandler requestHandler;
+    private final ResponseHandler responseHandler;
 
     public static Map<HttpMethod, Class<? extends Annotation>> HTTP_METHOD = new ConcurrentHashMap<>(){{
         put(HttpMethod.GET, Get.class);
@@ -39,9 +36,15 @@ public class Handler {
         put(HttpMethod.PUT, Put.class);
     }};
 
+    public HttpHandler(ObjectExtractorUtil extractor, HttpRequestHandler requestHandler, HttpResponseHandler responseHandler) {
+        this.extractor = extractor;
+        this.requestHandler = requestHandler;
+        this.responseHandler = responseHandler;
+    }
+
     static public class MethodWithSignature {
-        private Method method;
-        private String signature;
+        private final Method method;
+        private final String signature;
 
         public Method getMethod() {
             return method;
@@ -71,6 +74,7 @@ public class Handler {
 
             Class<?> controller = extractor
                     .extractController(controllers, url);
+
             MethodWithSignature method = extractor
                     .extractMethodFromController(controller, httpMethod, urn);
 
@@ -79,13 +83,10 @@ public class Handler {
             Map<String, String> params = extractor
                     .extractParams(method.getSignature(), urn);
 
-// TODO: 22.05.2023 обновить handler, перенести логику поиска метода контроллера сюда
-// TODO: 22.05.2023 вкинуть нужные данные из requestHandler (сигнатура и т.д...)
-
             Object returnedValue = requestHandler
                     .processRequest(objectController, method.getMethod(), params);
 
-            responseHandler.sendResponse(returnedValue);
+            responseHandler.processResponse(returnedValue, httpMethod);
 
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
             throw new RuntimeException(e);

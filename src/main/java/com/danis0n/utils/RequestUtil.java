@@ -1,5 +1,6 @@
 package com.danis0n.utils;
 
+import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.http.HttpMethod;
 import com.danis0n.radafil.engine.core.http.request.HttpRequest;
 
@@ -9,9 +10,8 @@ import java.io.IOException;
 import static com.danis0n.api.Api.API_PREFIX;
 import static java.util.Objects.nonNull;
 
+@InternalComponent
 public class RequestUtil {
-
-    public RequestUtil() {}
 
     public HttpRequest getHttpRequest(BufferedReader reader) throws IOException {
         String[] params = extractUrl(reader);

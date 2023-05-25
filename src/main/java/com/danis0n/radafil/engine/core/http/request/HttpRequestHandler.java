@@ -1,9 +1,7 @@
 package com.danis0n.radafil.engine.core.http.request;
 
 import com.danis0n.radafil.engine.annotation.http.input.PathVariable;
-import com.danis0n.radafil.engine.annotation.inject.Inject;
-import com.danis0n.radafil.engine.annotation.singleton.Singleton;
-import com.danis0n.radafil.engine.core.extractor.ObjectExtractor;
+import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,11 +10,14 @@ import java.util.Map;
 
 import static java.util.Objects.isNull;
 
-@Singleton
-public class HttpRequestHandler {
+@InternalComponent
+public class HttpRequestHandler implements RequestHandler {
 
+    public HttpRequestHandler() {}
+
+    @Override
     public Object processRequest(Object controller, Method method, Map<String, String> params)
-            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+            throws InvocationTargetException, IllegalAccessException {
 
         Object returnedValue = processMethod(method, params, controller);
 

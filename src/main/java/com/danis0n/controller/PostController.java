@@ -1,10 +1,10 @@
 package com.danis0n.controller;
 
-import com.danis0n.radafil.engine.annotation.http.RestController;
+import com.danis0n.radafil.engine.annotation.component.RestController;
 import com.danis0n.radafil.engine.annotation.http.method.Get;
 import com.danis0n.radafil.engine.annotation.http.RequestMapping;
 
-@RestController()
+@RestController
 @RequestMapping(path = "/api/v1/post")
 public class PostController {
 

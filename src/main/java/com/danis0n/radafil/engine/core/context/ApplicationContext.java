@@ -1,15 +1,15 @@
 package com.danis0n.radafil.engine.core.context;
 
 import com.danis0n.radafil.engine.annotation.http.RequestMapping;
-import com.danis0n.radafil.engine.annotation.http.RestController;
-import com.danis0n.radafil.engine.annotation.singleton.Singleton;
+import com.danis0n.radafil.engine.annotation.component.RestController;
+import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.config.Config;
 import com.danis0n.radafil.engine.core.factory.ObjectFactory;
 import com.danis0n.radafil.engine.exception.IllegalPrefixException;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,14 +43,14 @@ public class ApplicationContext {
 
         T t = factory.createObject(implClass);
 
-        if (implClass.isAnnotationPresent(Singleton.class)){
+        if (implClass.isAnnotationPresent(InternalComponent.class)){
             cache.put(type, t);
         }
 
         return t;
     }
 
-    public void scanForControllers() throws IOException {
+    public void scanForControllersPrefixUnique() {
 
         Set<Class<?>> controllers = config
                 .getScanner()
@@ -70,5 +70,18 @@ public class ApplicationContext {
         if (set.size() != controllersPrefix.size())
             throw new IllegalPrefixException
                     ("There are two or more controllers with same prefix");
+    }
+
+    public void scanForComponents(Class<? extends Annotation> annotation) {
+        Set<Class<?>> components = config.getScanner().getTypesAnnotatedWith(annotation);
+
+        List<Class<?>> collect = components
+                .stream()
+                .filter(clazz -> !clazz.isAnnotation())
+                .collect(Collectors.toList());
+
+        for (Class<?> clazz: collect) {
+            getObject(clazz);
+        }
     }
 }

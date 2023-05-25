@@ -1,15 +1,13 @@
 package com.danis0n.controller;
 
-import com.danis0n.dto.TestRequest;
-import com.danis0n.radafil.engine.annotation.http.RestController;
+import com.danis0n.radafil.engine.annotation.component.RestController;
 import com.danis0n.radafil.engine.annotation.http.method.Delete;
 import com.danis0n.radafil.engine.annotation.http.method.Get;
 import com.danis0n.radafil.engine.annotation.http.method.Post;
 import com.danis0n.radafil.engine.annotation.http.RequestMapping;
-import com.danis0n.radafil.engine.annotation.http.input.Body;
 import com.danis0n.radafil.engine.annotation.http.input.PathVariable;
 
-@RestController()
+@RestController
 @RequestMapping(path = "/api/v1/user")
 public class UserController {
 

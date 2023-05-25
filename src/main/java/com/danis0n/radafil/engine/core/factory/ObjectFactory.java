@@ -1,25 +1,31 @@
 package com.danis0n.radafil.engine.core.factory;
 
-import com.danis0n.radafil.engine.core.context.ApplicationContext;
 import com.danis0n.radafil.engine.core.configurator.ObjectConfigurator;
 import com.danis0n.radafil.engine.core.configurator.ProxyConfigurator;
+import com.danis0n.radafil.engine.core.context.ApplicationContext;
+import com.danis0n.radafil.engine.exception.IllegalConstructorAmountException;
 import lombok.SneakyThrows;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Parameter;
+import java.util.*;
 
 public class ObjectFactory {
+
     private final ApplicationContext context;
-    private List<ObjectConfigurator> configurators = new ArrayList<>();
-    private List<ProxyConfigurator> proxyConfigurators = new ArrayList<>();
+    private final List<ObjectConfigurator> configurators = new ArrayList<>();
+    private final List<ProxyConfigurator> proxyConfigurators = new ArrayList<>();
 
     @SneakyThrows
     public ObjectFactory(ApplicationContext context) {
-        this.context= context;
-        for (Class<? extends ObjectConfigurator> aClass : context.getConfig().getScanner().getSubTypesOf(ObjectConfigurator.class)) {
+        this.context = context;
+        for (Class<? extends ObjectConfigurator> aClass :
+                context.getConfig().getScanner().getSubTypesOf(ObjectConfigurator.class)) {
             configurators.add(aClass.getDeclaredConstructor().newInstance());
         }
-        for (Class<? extends ProxyConfigurator> aClass : context.getConfig().getScanner().getSubTypesOf(ProxyConfigurator.class)) {
+        for (Class<? extends ProxyConfigurator> aClass :
+                context.getConfig().getScanner().getSubTypesOf(ProxyConfigurator.class)) {
             proxyConfigurators.add(aClass.getDeclaredConstructor().newInstance());
         }
     }
@@ -45,7 +51,25 @@ public class ObjectFactory {
         configurators.forEach(objectConfigurator -> objectConfigurator.configure(t,context));
     }
 
-    private <T> T create(Class<T> implClass) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {
-        return implClass.getDeclaredConstructor().newInstance();
+    private <T> T create(Class<T> implClass)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException {
+
+        Constructor<?>[] constructors = implClass.getConstructors();
+
+        if (constructors.length != 1) throw new IllegalConstructorAmountException
+                ("Illegal amount of constructors for " + implClass.getName() + " class");
+
+        Constructor<?> constructor = constructors[0];
+        Parameter[] parameters = constructor.getParameters();
+
+        List<Object> classList = new ArrayList<>();
+        for (Parameter parameter: parameters) {
+            classList.add(context.getObject(parameter.getType()));
+        }
+
+        return classList.size() == 0 ?
+                (T) constructor.newInstance() :
+                (T) constructor.newInstance(classList.toArray());
     }
+
 }

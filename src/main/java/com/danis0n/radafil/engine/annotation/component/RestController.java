@@ -1,12 +1,10 @@
-package com.danis0n.radafil.engine.annotation.http;
-
-import com.danis0n.radafil.engine.annotation.singleton.Singleton;
+package com.danis0n.radafil.engine.annotation.component;
 
 import java.lang.annotation.*;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Singleton
+@Component
 @Inherited
 public @interface RestController {
 }

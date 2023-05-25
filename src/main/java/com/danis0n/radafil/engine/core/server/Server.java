@@ -1,7 +1,6 @@
 package com.danis0n.radafil.engine.core.server;
 
-import com.danis0n.radafil.engine.annotation.inject.Inject;
-import com.danis0n.radafil.engine.annotation.singleton.Singleton;
+import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.context.ApplicationContext;
 import com.danis0n.radafil.engine.core.handler.Listener;
 
@@ -10,12 +9,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
 
-@Singleton
+@InternalComponent
 public class Server {
 
-    @Inject
-    private Listener listener;
+    private final Listener listener;
+
     private final int port = 8080;
+
+    public Server(Listener listener) {
+        this.listener = listener;
+    }
 
     public void start(ApplicationContext context) {
         try(ServerSocket server = new ServerSocket(port)) {

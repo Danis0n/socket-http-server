@@ -1,21 +1,25 @@
 package com.danis0n.radafil.engine.core.http.response;
 
-import com.danis0n.radafil.engine.annotation.singleton.Singleton;
+import com.danis0n.radafil.engine.annotation.component.InternalComponent;
+import com.danis0n.radafil.engine.core.http.HttpMethod;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 
-@Singleton
-public class HttpResponseHandler {
+@InternalComponent
+public class HttpResponseHandler implements ResponseHandler {
 
-    public void sendResponse(Object object) {
+    public HttpResponseHandler() {}
+
+    @Override
+    public void processResponse(Object object, HttpMethod httpMethod) {
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(out)) {
 
 //            oos.writeObject(object);
 
-            System.out.println(object);
+            System.out.println(object.toString());
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
