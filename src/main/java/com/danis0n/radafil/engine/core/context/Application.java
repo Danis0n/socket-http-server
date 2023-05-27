@@ -5,26 +5,54 @@ import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.config.JavaConfig;
 import com.danis0n.radafil.engine.core.factory.ObjectFactory;
 import com.danis0n.radafil.engine.core.server.Server;
-import lombok.SneakyThrows;
+import com.danis0n.radafil.engine.core.store.Store;
+import com.danis0n.radafil.engine.exception.exceptions.IllegalPrefixException;
 
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Application {
 
-    @SneakyThrows
     public static void run(String packageToScan) {
-        JavaConfig config = new JavaConfig(packageToScan);
-        ApplicationContext context = new ApplicationContext(config);
-        ObjectFactory objectFactory = new ObjectFactory(context);
 
-        context.setFactory(objectFactory);
-        context.scanForComponents(InternalComponent.class);
-        context.scanForComponents(Component.class);
-        context.scanForControllersPrefixUnique();
+        ApplicationContext context = init(packageToScan);
 
-        Server server = context.getObject(Server.class);
+        Server server;
+
+        try {
+            server = context.getObject(Server.class);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
 
         server.start(context);
+    }
+
+    private static ApplicationContext init(String packageToScan) {
+        JavaConfig config = new JavaConfig(packageToScan);
+        Store store = new Store(new ConcurrentHashMap<>());
+        ApplicationContext context = new ApplicationContext(config, store);
+        ObjectFactory objectFactory = new ObjectFactory(context);
+        context.setFactory(objectFactory);
+        scanForComponents(context);
+        return context;
+    }
+
+    private static void scanForComponents(ApplicationContext context) {
+
+        try {
+
+            context.scanForControllersPrefixUnique();
+            context.scanForComponents(InternalComponent.class);
+            context.scanForComponents(Component.class);
+
+        } catch (InvocationTargetException |
+                 InstantiationException |
+                 IllegalAccessException |
+                 IllegalPrefixException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

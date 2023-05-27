@@ -1,4 +1,4 @@
-package com.danis0n.config;
+package com.danis0n.radafil.engine.core.config;
 
 import java.util.HashMap;
 import java.util.Map;

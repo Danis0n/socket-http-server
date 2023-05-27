@@ -6,6 +6,7 @@ import com.danis0n.radafil.engine.annotation.http.method.Get;
 import com.danis0n.radafil.engine.annotation.http.method.Post;
 import com.danis0n.radafil.engine.annotation.http.RequestMapping;
 import com.danis0n.radafil.engine.annotation.http.input.PathVariable;
+import com.danis0n.radafil.engine.exception.exceptions.TestException;
 
 @RestController
 @RequestMapping(path = "/api/v1/user")
@@ -33,6 +34,11 @@ public class UserController {
     @Delete(path = "/{id}")
     public String sayDelete(@PathVariable("id") String id) {
         return "Deleted " + id;
+    }
+
+    @Delete()
+    public void exception() {
+        throw new TestException("Test");
     }
 
 

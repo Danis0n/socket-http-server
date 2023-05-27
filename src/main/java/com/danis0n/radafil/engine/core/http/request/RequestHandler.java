@@ -7,5 +7,5 @@ import java.util.Map;
 public interface RequestHandler {
 
     Object processRequest(Object controller, Method method, Map<String, String> params)
-            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException;
+            throws InvocationTargetException, IllegalAccessException;
 }

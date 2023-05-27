@@ -22,13 +22,17 @@ public class Server {
 
     public void start(ApplicationContext context) {
         try(ServerSocket server = new ServerSocket(port)) {
-
             System.out.println("Server started on port: " + port);
 
-            while (true) {
-                Socket socket = server.accept();
-                listener.listen(socket, context);
-            }
+                while (true) {
+                    Socket socket = server.accept();
+
+                    new Thread(() -> {
+                        System.out.println("New thread " + Thread.currentThread().getId() + " started");
+                        listener.listen(socket, context);
+                    }).start();
+
+                }
 
         } catch (IOException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));

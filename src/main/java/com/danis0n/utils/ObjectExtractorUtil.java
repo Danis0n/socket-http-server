@@ -5,7 +5,7 @@ import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.http.HttpHandler;
 import com.danis0n.radafil.engine.core.handler.ObjectValidator;
 import com.danis0n.radafil.engine.core.http.HttpMethod;
-import com.danis0n.radafil.engine.exception.EndpointNotFoundException;
+import com.danis0n.radafil.engine.exception.exceptions.EndpointNotFoundException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,7 +29,7 @@ public class ObjectExtractorUtil {
     }
 
     public HttpHandler.MethodWithSignature extractMethodFromController(Class<?> controller, HttpMethod httpMethod, String urn)
-            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, EndpointNotFoundException {
 
         List<Method> sortedMethods = Arrays
                 .stream(controller.getMethods())

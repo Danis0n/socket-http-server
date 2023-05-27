@@ -5,16 +5,16 @@ import com.danis0n.radafil.engine.annotation.component.RestController;
 import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.config.Config;
 import com.danis0n.radafil.engine.core.factory.ObjectFactory;
-import com.danis0n.radafil.engine.exception.IllegalPrefixException;
+import com.danis0n.radafil.engine.core.store.Store;
+import com.danis0n.radafil.engine.exception.exceptions.IllegalPrefixException;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class ApplicationContext {
@@ -23,17 +23,20 @@ public class ApplicationContext {
     @Getter
     private ObjectFactory factory;
     @Getter
-    private Map<Class, Object> cache = new ConcurrentHashMap<>();
+    private final Store store;
     @Getter
-    private Config config;
+    private final Config config;
 
-    public ApplicationContext(Config config) {
+    public ApplicationContext(Config config, Store store) {
         this.config = config;
+        this.store = store;
     }
 
-    public <T> T getObject(Class<T> type) {
-        if (cache.containsKey(type)) {
-            return (T) cache.get(type);
+    public <T> T getObject(Class<T> type)
+            throws InvocationTargetException, InstantiationException, IllegalAccessException {
+
+        if (store.getCachedObjects().containsKey(type)) {
+            return (T) store.getCachedObjects().get(type);
         }
 
         Class<? extends T> implClass = type;
@@ -44,13 +47,13 @@ public class ApplicationContext {
         T t = factory.createObject(implClass);
 
         if (implClass.isAnnotationPresent(InternalComponent.class)){
-            cache.put(type, t);
+            store.getCachedObjects().put(type, t);
         }
 
         return t;
     }
 
-    public void scanForControllersPrefixUnique() {
+    public void scanForControllersPrefixUnique() throws IllegalPrefixException {
 
         Set<Class<?>> controllers = config
                 .getScanner()
@@ -72,8 +75,11 @@ public class ApplicationContext {
                     ("There are two or more controllers with same prefix");
     }
 
-    public void scanForComponents(Class<? extends Annotation> annotation) {
-        Set<Class<?>> components = config.getScanner().getTypesAnnotatedWith(annotation);
+    public void scanForComponents(Class<? extends Annotation> annotation)
+            throws InvocationTargetException, InstantiationException, IllegalAccessException {
+        Set<Class<?>> components = config
+                .getScanner()
+                .getTypesAnnotatedWith(annotation);
 
         List<Class<?>> collect = components
                 .stream()

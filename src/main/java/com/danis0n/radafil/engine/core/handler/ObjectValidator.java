@@ -9,8 +9,6 @@ import java.util.regex.Pattern;
 @InternalComponent
 public class ObjectValidator {
 
-    public ObjectValidator() {}
-
     public boolean isControllerValidatedByPrefix(Class<?> clazz, String url) {
         RequestMapping annotation = clazz.getAnnotation(RequestMapping.class);
         String prefix = annotation.path();

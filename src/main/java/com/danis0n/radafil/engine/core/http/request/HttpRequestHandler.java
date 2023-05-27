@@ -13,8 +13,6 @@ import static java.util.Objects.isNull;
 @InternalComponent
 public class HttpRequestHandler implements RequestHandler {
 
-    public HttpRequestHandler() {}
-
     @Override
     public Object processRequest(Object controller, Method method, Map<String, String> params)
             throws InvocationTargetException, IllegalAccessException {

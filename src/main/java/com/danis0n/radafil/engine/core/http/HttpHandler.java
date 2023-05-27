@@ -1,25 +1,25 @@
 package com.danis0n.radafil.engine.core.http;
 
+import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.annotation.component.RestController;
 import com.danis0n.radafil.engine.annotation.http.method.Delete;
 import com.danis0n.radafil.engine.annotation.http.method.Get;
 import com.danis0n.radafil.engine.annotation.http.method.Post;
 import com.danis0n.radafil.engine.annotation.http.method.Put;
-import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.context.ApplicationContext;
+import com.danis0n.radafil.engine.core.http.request.HttpRequest;
 import com.danis0n.radafil.engine.core.http.request.HttpRequestHandler;
 import com.danis0n.radafil.engine.core.http.request.RequestHandler;
 import com.danis0n.radafil.engine.core.http.response.HttpResponseHandler;
 import com.danis0n.radafil.engine.core.http.response.ResponseHandler;
+import com.danis0n.radafil.engine.exception.ExceptionHandler;
 import com.danis0n.utils.ObjectExtractorUtil;
-import com.danis0n.radafil.engine.core.http.request.HttpRequest;
 
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @InternalComponent
@@ -28,6 +28,7 @@ public class HttpHandler {
     private final ObjectExtractorUtil extractor;
     private final RequestHandler requestHandler;
     private final ResponseHandler responseHandler;
+    private final ExceptionHandler exceptionHandler;
 
     public static Map<HttpMethod, Class<? extends Annotation>> HTTP_METHOD = new ConcurrentHashMap<>(){{
         put(HttpMethod.GET, Get.class);
@@ -36,10 +37,14 @@ public class HttpHandler {
         put(HttpMethod.PUT, Put.class);
     }};
 
-    public HttpHandler(ObjectExtractorUtil extractor, HttpRequestHandler requestHandler, HttpResponseHandler responseHandler) {
+    public HttpHandler(ObjectExtractorUtil extractor,
+                       HttpRequestHandler requestHandler,
+                       HttpResponseHandler responseHandler,
+                       ExceptionHandler exceptionHandler) {
         this.extractor = extractor;
         this.requestHandler = requestHandler;
         this.responseHandler = responseHandler;
+        this.exceptionHandler = exceptionHandler;
     }
 
     static public class MethodWithSignature {
@@ -60,7 +65,7 @@ public class HttpHandler {
         }
     }
 
-    public void handle(HttpRequest httpRequest, InputStream in, OutputStream out, ApplicationContext context) {
+    public void handle(HttpRequest httpRequest, OutputStream out, ApplicationContext context) {
 
         HttpMethod httpMethod = httpRequest.getHttpMethod();
         String urn = httpRequest.getUrn();
@@ -86,12 +91,12 @@ public class HttpHandler {
             Object returnedValue = requestHandler
                     .processRequest(objectController, method.getMethod(), params);
 
-            responseHandler.processResponse(returnedValue, httpMethod);
+            responseHandler.processResponse(returnedValue, httpMethod, out);
 
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            String error = exceptionHandler.handle(e, context);
+            responseHandler.processException(error, out);
         }
-
     }
 
 }
