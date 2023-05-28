@@ -6,5 +6,4 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Component
 @Inherited
-public @interface RestController {
-}
+public @interface RestController {}
