@@ -6,7 +6,7 @@ import com.danis0n.radafil.engine.core.config.JavaConfig;
 import com.danis0n.radafil.engine.core.factory.ObjectFactory;
 import com.danis0n.radafil.engine.core.server.Server;
 import com.danis0n.radafil.engine.core.store.Store;
-import com.danis0n.radafil.engine.exception.exceptions.IllegalPrefixException;
+import com.danis0n.radafil.engine.exception.exceptions.internal.IllegalPrefixException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;

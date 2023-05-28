@@ -5,7 +5,7 @@ import com.danis0n.radafil.engine.core.http.HttpMethod;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResponseConfig {
+public class ResponseConstant {
 
     public static final Map<HttpMethod, Integer> RESPONSE_CODE = new HashMap<>() {{
         put(HttpMethod.GET, 200);

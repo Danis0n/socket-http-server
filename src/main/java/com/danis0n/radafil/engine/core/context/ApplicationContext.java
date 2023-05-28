@@ -6,7 +6,7 @@ import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.config.Config;
 import com.danis0n.radafil.engine.core.factory.ObjectFactory;
 import com.danis0n.radafil.engine.core.store.Store;
-import com.danis0n.radafil.engine.exception.exceptions.IllegalPrefixException;
+import com.danis0n.radafil.engine.exception.exceptions.internal.IllegalPrefixException;
 import lombok.Getter;
 import lombok.Setter;
 

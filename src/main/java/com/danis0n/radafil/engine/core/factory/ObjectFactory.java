@@ -3,7 +3,7 @@ package com.danis0n.radafil.engine.core.factory;
 import com.danis0n.radafil.engine.core.configurator.ObjectConfigurator;
 import com.danis0n.radafil.engine.core.configurator.ProxyConfigurator;
 import com.danis0n.radafil.engine.core.context.ApplicationContext;
-import com.danis0n.radafil.engine.exception.exceptions.IllegalConstructorAmountException;
+import com.danis0n.radafil.engine.exception.exceptions.internal.IllegalConstructorAmountException;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Constructor;

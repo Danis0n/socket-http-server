@@ -9,8 +9,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 import static com.danis0n.radafil.engine.core.config.ContentType.CONTENT_TYPES;
-import static com.danis0n.radafil.engine.core.config.ResponseConfig.RESPONSE_CODE;
-import static com.danis0n.radafil.engine.core.config.ResponseConfig.RESPONSE_STATUS;
+import static com.danis0n.radafil.engine.core.config.ResponseConstant.RESPONSE_CODE;
+import static com.danis0n.radafil.engine.core.config.ResponseConstant.RESPONSE_STATUS;
 
 @InternalComponent
 public class HttpResponseHandler implements ResponseHandler {

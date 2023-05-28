@@ -94,8 +94,8 @@ public class HttpHandler {
             responseHandler.processResponse(returnedValue, httpMethod, out);
 
         } catch (Exception e) {
-            String error = exceptionHandler.handle(e, context);
-            responseHandler.processException(error, out);
+            String message = exceptionHandler.handle(e, context);
+            responseHandler.processException(message, out);
         }
     }
 

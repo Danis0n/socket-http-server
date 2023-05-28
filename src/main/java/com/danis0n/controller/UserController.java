@@ -6,7 +6,7 @@ import com.danis0n.radafil.engine.annotation.http.method.Get;
 import com.danis0n.radafil.engine.annotation.http.method.Post;
 import com.danis0n.radafil.engine.annotation.http.RequestMapping;
 import com.danis0n.radafil.engine.annotation.http.input.PathVariable;
-import com.danis0n.radafil.engine.exception.exceptions.TestException;
+import com.danis0n.radafil.engine.exception.exceptions.runtime.TestException;
 
 @RestController
 @RequestMapping(path = "/api/v1/user")

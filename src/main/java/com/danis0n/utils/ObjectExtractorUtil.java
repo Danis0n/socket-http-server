@@ -5,7 +5,7 @@ import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.http.HttpHandler;
 import com.danis0n.radafil.engine.core.handler.ObjectValidator;
 import com.danis0n.radafil.engine.core.http.HttpMethod;
-import com.danis0n.radafil.engine.exception.exceptions.EndpointNotFoundException;
+import com.danis0n.radafil.engine.exception.exceptions.runtime.EndpointNotFoundException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -40,7 +40,7 @@ public class ObjectExtractorUtil {
                 findMethodBySignature(urn, httpMethod, sortedMethods);
 
         if (isNull(methodWithSignature))
-            throw new EndpointNotFoundException("Endpoint for current url was not found");
+            throw new EndpointNotFoundException("There are no controller with current prefix");
 
         return methodWithSignature;
     }

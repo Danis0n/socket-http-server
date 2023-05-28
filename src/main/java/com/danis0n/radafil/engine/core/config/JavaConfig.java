@@ -3,7 +3,6 @@ package com.danis0n.radafil.engine.core.config;
 import lombok.Getter;
 import org.reflections.Reflections;
 
-import java.util.Map;
 import java.util.Set;
 
 public class JavaConfig implements Config {

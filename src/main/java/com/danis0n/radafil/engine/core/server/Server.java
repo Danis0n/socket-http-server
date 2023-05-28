@@ -28,7 +28,6 @@ public class Server {
                     Socket socket = server.accept();
 
                     new Thread(() -> {
-                        System.out.println("New thread " + Thread.currentThread().getId() + " started");
                         listener.listen(socket, context);
                     }).start();
 
