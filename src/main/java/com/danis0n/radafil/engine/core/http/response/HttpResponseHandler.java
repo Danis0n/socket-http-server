@@ -3,6 +3,7 @@ package com.danis0n.radafil.engine.core.http.response;
 import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.converter.ObjectToJSONConverter;
 import com.danis0n.radafil.engine.core.http.HttpMethod;
+import com.danis0n.radafil.engine.exception.ExceptionMessage;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -49,8 +50,8 @@ public class HttpResponseHandler implements ResponseHandler {
     }
 
     @Override
-    public void processException(String message, OutputStream out) {
-        System.out.println(message);
+    public void processException(ExceptionMessage message, OutputStream out) {
+        System.out.println(message.toString());
     }
 
     private void sendHeader(OutputStream out,

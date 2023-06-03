@@ -31,7 +31,9 @@ public class ObjectFactory {
     }
 
     public <T> T createObject(Class<T> implClass)
-            throws InvocationTargetException, InstantiationException, IllegalAccessException {
+            throws InvocationTargetException, InstantiationException,
+            IllegalAccessException, IllegalConstructorAmountException {
+
         T t = create(implClass);
         configure(t);
 
@@ -52,7 +54,8 @@ public class ObjectFactory {
     }
 
     private <T> T create(Class<T> implClass)
-            throws InstantiationException, IllegalAccessException, InvocationTargetException {
+            throws InstantiationException, IllegalAccessException,
+            InvocationTargetException, IllegalConstructorAmountException {
 
         Constructor<?>[] constructors = implClass.getConstructors();
 

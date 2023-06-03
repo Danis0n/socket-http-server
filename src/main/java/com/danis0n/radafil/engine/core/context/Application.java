@@ -6,6 +6,9 @@ import com.danis0n.radafil.engine.core.config.JavaConfig;
 import com.danis0n.radafil.engine.core.factory.ObjectFactory;
 import com.danis0n.radafil.engine.core.server.Server;
 import com.danis0n.radafil.engine.core.store.Store;
+import com.danis0n.radafil.engine.exception.ExceptionHandler;
+import com.danis0n.radafil.engine.exception.exceptions.internal.ControllerException;
+import com.danis0n.radafil.engine.exception.exceptions.internal.IllegalConstructorAmountException;
 import com.danis0n.radafil.engine.exception.exceptions.internal.IllegalPrefixException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -17,15 +20,16 @@ public class Application {
 
         ApplicationContext context = init(packageToScan);
 
-        Server server;
-
         try {
-            server = context.getObject(Server.class);
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+
+            Server server = context.getObject(Server.class);
+            server.start(context);
+
+        } catch (ReflectiveOperationException | IllegalConstructorAmountException e) {
+            e.printStackTrace();
+            System.exit(500);
         }
 
-        server.start(context);
     }
 
     private static ApplicationContext init(String packageToScan) {
@@ -46,13 +50,10 @@ public class Application {
             context.scanForComponents(InternalComponent.class);
             context.scanForComponents(Component.class);
 
-        } catch (InvocationTargetException |
-                 InstantiationException |
-                 IllegalAccessException |
-                 IllegalPrefixException e) {
-            throw new RuntimeException(e);
+        } catch (ReflectiveOperationException | ControllerException e) {
+            e.printStackTrace();
+            System.exit(500);
         }
-
     }
 
 }

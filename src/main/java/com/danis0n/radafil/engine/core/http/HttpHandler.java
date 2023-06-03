@@ -13,6 +13,7 @@ import com.danis0n.radafil.engine.core.http.request.RequestHandler;
 import com.danis0n.radafil.engine.core.http.response.HttpResponseHandler;
 import com.danis0n.radafil.engine.core.http.response.ResponseHandler;
 import com.danis0n.radafil.engine.exception.ExceptionHandler;
+import com.danis0n.radafil.engine.exception.ExceptionMessage;
 import com.danis0n.utils.ObjectExtractorUtil;
 
 import java.io.OutputStream;
@@ -94,7 +95,7 @@ public class HttpHandler {
             responseHandler.processResponse(returnedValue, httpMethod, out);
 
         } catch (Exception e) {
-            String message = exceptionHandler.handle(e, context);
+            ExceptionMessage message = exceptionHandler.handle(e, context);
             responseHandler.processException(message, out);
         }
     }

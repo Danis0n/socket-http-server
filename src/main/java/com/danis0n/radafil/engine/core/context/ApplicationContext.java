@@ -6,6 +6,7 @@ import com.danis0n.radafil.engine.annotation.component.InternalComponent;
 import com.danis0n.radafil.engine.core.config.Config;
 import com.danis0n.radafil.engine.core.factory.ObjectFactory;
 import com.danis0n.radafil.engine.core.store.Store;
+import com.danis0n.radafil.engine.exception.exceptions.internal.IllegalConstructorAmountException;
 import com.danis0n.radafil.engine.exception.exceptions.internal.IllegalPrefixException;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,7 +34,8 @@ public class ApplicationContext {
     }
 
     public <T> T getObject(Class<T> type)
-            throws InvocationTargetException, InstantiationException, IllegalAccessException {
+            throws InvocationTargetException, InstantiationException,
+            IllegalAccessException, IllegalConstructorAmountException {
 
         if (store.getCachedObjects().containsKey(type)) {
             return (T) store.getCachedObjects().get(type);
@@ -76,7 +78,9 @@ public class ApplicationContext {
     }
 
     public void scanForComponents(Class<? extends Annotation> annotation)
-            throws InvocationTargetException, InstantiationException, IllegalAccessException {
+            throws InvocationTargetException, InstantiationException,
+            IllegalAccessException, IllegalConstructorAmountException {
+
         Set<Class<?>> components = config
                 .getScanner()
                 .getTypesAnnotatedWith(annotation);
