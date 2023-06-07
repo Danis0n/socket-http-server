@@ -1,5 +1,6 @@
 package com.danis0n.radafil.engine.core.factory;
 
+import com.danis0n.radafil.engine.annotation.component.PostConstruct;
 import com.danis0n.radafil.engine.core.configurator.ObjectConfigurator;
 import com.danis0n.radafil.engine.core.configurator.ProxyConfigurator;
 import com.danis0n.radafil.engine.core.context.ApplicationContext;
@@ -8,6 +9,7 @@ import lombok.SneakyThrows;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
@@ -36,6 +38,7 @@ public class ObjectFactory {
 
         T t = create(implClass);
         configure(t);
+        invokeInit(implClass, t);
 
         t = wrapWithProxyIfNeeded(implClass, t);
         return t;
@@ -51,6 +54,14 @@ public class ObjectFactory {
 
     private <T> void configure(T t) {
         configurators.forEach(objectConfigurator -> objectConfigurator.configure(t,context));
+    }
+
+    private <T> void invokeInit(Class<T> implClass, T t) throws InvocationTargetException, IllegalAccessException {
+        for (Method method: implClass.getMethods()) {
+            if (method.isAnnotationPresent(PostConstruct.class)) {
+                method.invoke(t);
+            }
+        }
     }
 
     private <T> T create(Class<T> implClass)

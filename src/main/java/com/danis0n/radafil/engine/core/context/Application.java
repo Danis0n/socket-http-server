@@ -12,6 +12,9 @@ import com.danis0n.radafil.engine.exception.exceptions.internal.IllegalConstruct
 import com.danis0n.radafil.engine.exception.exceptions.internal.IllegalPrefixException;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Application {
